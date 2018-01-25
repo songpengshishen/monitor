@@ -3,9 +3,12 @@ package com.jd.nb.monitor.resource.db.orm.mybatis;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
- * 数据库访问监控过滤器，过滤到一些特殊的无需健康的SQL语句。
- * @author yangwubing
+ * 数据库监控过滤器<p/>
+ * Description:  过滤一些无须监控sql
  *
+ * <p/>
+ * @author <a href=mailto:wangsongpeng@jd.com>王宋鹏</a>
+ * @since 2018/01/25
  */
 public interface DbAccessFilter {
 

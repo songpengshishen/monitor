@@ -5,9 +5,12 @@ import org.apache.ibatis.mapping.MappedStatement;
 import java.util.List;
 
 /**
- * 支持排除的数据库访问过滤器。
- * @author yangwubing
+ * 数据库监控过滤器<p/>
+ * Description:  过滤一些无须监控sql
  *
+ * <p/>
+ * @author <a href=mailto:wangsongpeng@jd.com>王宋鹏</a>
+ * @since 2018/01/25
  */
 public class DefaultDbAccessFilter implements DbAccessFilter {
 

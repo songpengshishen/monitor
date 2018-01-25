@@ -23,12 +23,12 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * 数据库访问监视拦截器。
- * 主要用于监控数据库访问的性能，执行异常等信息。
- * 还可以监视数据库连接池的连接异常信息。
- * 详细的配置和使用方法请参考文档：http://cf.jd.com/pages/viewpage.action?pageId=72718124
- * @author yangwubing
- *
+ * 数据库Sql执行监控 <p/>
+ * Description:  基于Mybatis拦截器拦截Executor执行,并增加监控功能.
+ *               主要提供慢sql监控,sql执行监控,连接数过多监控
+ * <p/>
+ * @author <a href=mailto:wangsongpeng@jd.com>王宋鹏</a>
+ * @since 2018/01/25
  */
 @Intercepts({
 	@Signature(
@@ -47,103 +47,90 @@ import java.util.Set;
 public class DbAccessInterceptor implements Interceptor{
 	
 	private static Logger logger = LoggerFactory.getLogger(DbAccessInterceptor.class);
-	
+
+	/********************开关配置Start********************/
 	/**
 	 * SQL执行异常报警开关。
 	 */
 	private boolean sqlExceptionEnabled = true;
-	
+
+	/**
+	 * 慢SQL报警开关。
+	 */
+	private boolean slowSqlEnabled = true;
+
+	/**
+	 * 连接数过多报警开关。
+	 */
+	private boolean tooManyActiveConnEnabled = true;
+
+	/********************开关配置End********************/
+
+	/******************** umpKey Start********************/
 	/**
 	 * SQL执行异常UMP报警的key。
 	 */
 	private String sqlExceptionKey = "ql.app.sql.exception";
 	
-	
-	/**
-	 * 慢SQL报警开关。
-	 */
-	private boolean slowSqlEnabled = true;
-	
 	/**
 	 * SQL执行异常UMP报警的key。
 	 */
 	private String slowSqlKey = "ql.app.slowsql.timeout";
-	
-	/**
-	 * 最小的慢SQL超时时间，不能小于这个值，以免报警过于频繁。
-	 */
-	public static final long MIN_SLOW_SQL_TIMEOUT = 20;
-	
-	/**
-	 * 慢SQL执行超时时间，单位是毫秒。
-	 */
-	private long slowSqlTimeout = 1000;
-	
-	/**
-	 * 连接数过多报警开关。
-	 */
-	private boolean tooManyActiveConnEnabled = true;
-	
+
+
 	/**
 	 * 连接数过多UMP报警的key。
 	 */
 	private String tooManyActiveConnKey = "ql.app.tooMany.active.connection";
 
+	/******************** umpKey End********************/
+
+	/******************** 指标参数配置 Start*********************/
+
 	/**
-	 * 最低允许的活跃连接占比。不能过低，以免导致报警过于频繁。
+	 * 慢SQL执行超时时间，单位是毫秒。
 	 */
-	public static final float MIN_MAX_ACTIVE_CONNECTION_RATIO = 0.3f;
-	
+	private long slowSqlTimeout = 1000;
+
+
 	/**
 	 * 连接数过多报警。活跃连接占比允许的最大值，超过该值将会报警。
 	 */
 	private float maxActiveConRatio = 0.7f;
-	
+
+
 	/**
 	 * 日志中是否打印DB的连接url。
 	 */
 	private boolean isLogDBUrl = false;
-	
-	/**
-	 * 监控过滤器，通过过滤的才需要监控。
-	 */
-	private DbAccessFilter filter = new DefaultDbAccessFilter();
-	
+
+
 	/**
 	 * 忽略的sql语句id列表，多个id请以";"隔开。sql的id必须是包含namespace的完整id值。
 	 */
 	private String excludeStatementIds;
+
+	/******************** 指标参数配置 end*********************/
+
+
+
+	/**
+	 * 最小的慢SQL超时时间，不能小于这个值，以免报警过于频繁。
+	 */
+	public static final long MIN_SLOW_SQL_TIMEOUT = 20;
 	
-	
-	public String getExcludeStatementIds() {
-		return excludeStatementIds;
-	}
 
-	public void setExcludeStatementIds(String excludeStatementIds) {
-		this.excludeStatementIds = excludeStatementIds;
-		if(excludeStatementIds!=null && excludeStatementIds.length()>0){
-			((DefaultDbAccessFilter)this.filter).setExcludedStatements(Arrays.asList(excludeStatementIds.split(";")));
-		}
-		else{
-			((DefaultDbAccessFilter)this.filter).setExcludedStatements(null);
-		}
-	}
+	/**
+	 * 最低允许的活跃连接占比。不能过低，以免导致报警过于频繁。
+	 */
+	public static final float MIN_MAX_ACTIVE_CONNECTION_RATIO = 0.3f;
 
-	public boolean isLogDBUrl() {
-		return isLogDBUrl;
-	}
+	/**
+	 * 监控过滤器，通过过滤的才需要监控。
+	 */
+	private DbAccessFilter filter = new DefaultDbAccessFilter();
 
-	public void setLogDBUrl(boolean isLogDBUrl) {
-		this.isLogDBUrl = isLogDBUrl;
-	}
 
-	public DbAccessFilter getFilter() {
-		return filter;
-	}
-
-	public void setFilter(DbAccessFilter filter) {
-		this.filter = filter;
-	}
 
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
@@ -345,5 +332,36 @@ public class DbAccessInterceptor implements Interceptor{
 				this.maxActiveConRatio = maxActiveConRatio;
 			}
 		}
+	}
+
+
+	public String getExcludeStatementIds() {
+		return excludeStatementIds;
+	}
+
+	public void setExcludeStatementIds(String excludeStatementIds) {
+		this.excludeStatementIds = excludeStatementIds;
+		if(excludeStatementIds!=null && excludeStatementIds.length()>0){
+			((DefaultDbAccessFilter)this.filter).setExcludedStatements(Arrays.asList(excludeStatementIds.split(";")));
+		}
+		else{
+			((DefaultDbAccessFilter)this.filter).setExcludedStatements(null);
+		}
+	}
+
+	public boolean isLogDBUrl() {
+		return isLogDBUrl;
+	}
+
+	public void setLogDBUrl(boolean isLogDBUrl) {
+		this.isLogDBUrl = isLogDBUrl;
+	}
+
+	public DbAccessFilter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(DbAccessFilter filter) {
+		this.filter = filter;
 	}
 }
