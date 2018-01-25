@@ -1,6 +1,7 @@
 package com.jd.nb.monitor.resource.db.jdbc.ds;
 import com.jd.nb.monitor.resource.db.jdbc.proxy.ProxyDataSource;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -11,10 +12,23 @@ import java.sql.SQLException;
  */
 public abstract class AbstractDataSource extends ProxyDataSource {
 
+    /**
+     * 目标数据源
+     */
+    protected DataSource targetDataSource;
+
+
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
         return getConnection();
     }
 
+    public DataSource getTargetDataSource() {
+        return targetDataSource;
+    }
+
+    public void setTargetDataSource(DataSource targetDataSource) {
+        this.targetDataSource = targetDataSource;
+    }
 
 }

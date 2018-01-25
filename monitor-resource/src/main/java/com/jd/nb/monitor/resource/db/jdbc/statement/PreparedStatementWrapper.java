@@ -13,6 +13,13 @@ import java.util.Calendar;
  * @since 2018/01/25
  */
 public class PreparedStatementWrapper extends AbstractPreparedStatement{
+
+
+    public PreparedStatementWrapper(PreparedStatement preparedStatement){
+        this.targetPreparedStatement = preparedStatement;
+    }
+
+
     @Override
     public ResultSet executeQuery() throws SQLException {
         return null;

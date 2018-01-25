@@ -11,7 +11,6 @@ import java.sql.*;
  */
 public class StatementWrapper extends AbstractStatement{
 
-    private final ConnectionWrapper connection;
 
     private final int resultSetType;
 
@@ -20,16 +19,16 @@ public class StatementWrapper extends AbstractStatement{
     private final int resultSetHoldability;
 
 
-    public StatementWrapper(final ConnectionWrapper connection) {
-        this(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+    public StatementWrapper(Statement statement) {
+        this(statement, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
     }
 
-    public StatementWrapper(final ConnectionWrapper connection, final int resultSetType, final int resultSetConcurrency) {
-        this(connection, resultSetType, resultSetConcurrency, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+    public StatementWrapper(Statement statement, final int resultSetType, final int resultSetConcurrency) {
+        this(statement, resultSetType, resultSetConcurrency, ResultSet.HOLD_CURSORS_OVER_COMMIT);
     }
 
-    public StatementWrapper(final ConnectionWrapper connection, final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability) {
-        this.connection = connection;
+    public StatementWrapper(Statement statement, final int resultSetType, final int resultSetConcurrency, final int resultSetHoldability) {
+        this.targetStatement = statement;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
         this.resultSetHoldability = resultSetHoldability;

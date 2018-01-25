@@ -1,8 +1,7 @@
 package com.jd.nb.monitor.resource.db.jdbc.connection;
-
 import com.jd.nb.monitor.resource.db.jdbc.ds.DataSourceWrapper;
+import com.jd.nb.monitor.resource.db.jdbc.statement.PreparedStatementWrapper;
 import com.jd.nb.monitor.resource.db.jdbc.statement.StatementWrapper;
-
 import java.sql.*;
 
 /**
@@ -12,81 +11,80 @@ import java.sql.*;
  */
 public class ConnectionWrapper extends AbstractConnection {
 
-    private DataSourceWrapper dataSourceWrapper;
 
-    public ConnectionWrapper(DataSourceWrapper dataSourceWrapper){
-        this.dataSourceWrapper = dataSourceWrapper;
+    public ConnectionWrapper(Connection connection){
+      this.targetConnection = connection;
     }
 
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new StatementWrapper(this);
+        return new StatementWrapper(getTargetConnection().createStatement());
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return null;
+        return new PreparedStatementWrapper(getTargetConnection().prepareStatement(sql));
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-
+        getTargetConnection().setAutoCommit(autoCommit);
     }
 
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return false;
+       return getTargetConnection().getAutoCommit();
     }
 
     @Override
     public void commit() throws SQLException {
-
+         getTargetConnection().commit();
     }
 
     @Override
     public void rollback() throws SQLException {
-
+         getTargetConnection().rollback();
     }
 
     @Override
     public void close() throws SQLException {
-
+         getTargetConnection().close();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return false;
+        return getTargetConnection().isClosed();
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;
+        return getTargetConnection().getMetaData();
     }
 
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
-
+        getTargetConnection().setReadOnly(readOnly);
     }
 
     @Override
     public boolean isReadOnly() throws SQLException {
-        return false;
+        return getTargetConnection().isReadOnly();
     }
 
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
-
+        getTargetConnection().setTransactionIsolation(level);
     }
 
     @Override
     public int getTransactionIsolation() throws SQLException {
-        return 0;
+        return  getTargetConnection().getTransactionIsolation();
     }
 
     @Override
     public SQLWarning getWarnings() throws SQLException {
-        return null;
+        return getTargetConnection().getWarnings();
     }
 
     @Override
@@ -96,7 +94,7 @@ public class ConnectionWrapper extends AbstractConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new StatementWrapper(this,resultSetType,resultSetConcurrency);
+        return null;
     }
 
     @Override
@@ -116,7 +114,7 @@ public class ConnectionWrapper extends AbstractConnection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new StatementWrapper(this,resultSetType,resultSetConcurrency,resultSetHoldability);
+        return null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.jd.nb.monitor.resource.db.jdbc.ds;
 
 import com.jd.nb.monitor.resource.db.jdbc.connection.ConnectionWrapper;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -14,7 +15,7 @@ public class DataSourceWrapper extends AbstractDataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return new ConnectionWrapper(this);
+        return new ConnectionWrapper(getTargetDataSource().getConnection());
     }
 
 
