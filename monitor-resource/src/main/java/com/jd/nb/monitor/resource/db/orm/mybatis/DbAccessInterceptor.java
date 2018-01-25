@@ -85,7 +85,7 @@ public class DbAccessInterceptor implements Interceptor{
 
 	/******************** umpKey End********************/
 
-	/******************** 指标参数配置 Start*********************/
+	/******************** 指标参数配置 *********************/
 
 	/**
 	 * 慢SQL执行超时时间，单位是毫秒。
@@ -110,7 +110,7 @@ public class DbAccessInterceptor implements Interceptor{
 	 */
 	private String excludeStatementIds;
 
-	/******************** 指标参数配置 end*********************/
+	/******************** 指标参数配置 *********************/
 
 
 
