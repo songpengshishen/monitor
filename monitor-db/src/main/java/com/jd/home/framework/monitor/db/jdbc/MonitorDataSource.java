@@ -9,4 +9,12 @@ import javax.sql.DataSource;
  */
 public interface MonitorDataSource extends DataSource{
 
+    /**
+     * 获取当前活跃的连接数
+     * @return
+     */
+     int getActiveConnections();
+
+
+
 }

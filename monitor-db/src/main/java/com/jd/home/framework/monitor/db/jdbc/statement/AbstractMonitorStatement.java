@@ -224,11 +224,5 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
         return false;
     }
 
-    public Statement getTargetStatement() {
-        return targetStatement;
-    }
 
-    public void setTargetStatement(Statement targetStatement) {
-        this.targetStatement = targetStatement;
-    }
 }

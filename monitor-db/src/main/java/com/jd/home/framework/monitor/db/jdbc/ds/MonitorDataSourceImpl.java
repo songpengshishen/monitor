@@ -8,4 +8,9 @@ package com.jd.home.framework.monitor.db.jdbc.ds;
 public class MonitorDataSourceImpl extends AbstractMonitorDataSource {
 
 
+
+    @Override
+    public int getActiveConnections() {
+        return 0;
+    }
 }

@@ -19,7 +19,6 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
 
     protected DataSource targetDataSource;
 
-
     @Override
     public Connection getConnection() throws SQLException {
         return new MonitorConnectionImpl(targetDataSource.getConnection());
