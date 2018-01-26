@@ -5,8 +5,8 @@ import java.sql.SQLDataException;
 import java.sql.SQLException;
 
 /**
- * Title : 监控Wrapper接口
- * Description: 提供JDBC原生方法实现,并增加监控功能   </br>
+ * Title : 监控Wrapper实现
+ * Description: 提供JDBC原生方法实现 </br>
  * @author <a href=mailto:wangsongpeng@jd.com>王宋鹏</a>
  * @since 2018/1/26
  */
