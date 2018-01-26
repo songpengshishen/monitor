@@ -1,5 +1,6 @@
 package com.jd.home.framework.monitor.db.jdbc.ds;
 import com.alibaba.druid.pool.DruidDataSource;
+import com.jd.home.framework.monitor.db.enums.DataSourceTypeEnum;
 
 /**
  * Title : 监控Druid数据源实现
@@ -17,11 +18,17 @@ public class MonitorDruidDataSource extends AbstractMonitorDataSource {
     }
 
     @Override
+    public DataSourceTypeEnum getDataSourceType() {
+        return DataSourceTypeEnum.DRUID;
+    }
+
+    @Override
     protected void refRealDataSource() {
         if(!(this.targetDataSource instanceof DruidDataSource)){
             throw new IllegalArgumentException("Only Support DruidDataSource");
         }
         druidDataSource = (DruidDataSource)this.targetDataSource;
     }
+
 
 }

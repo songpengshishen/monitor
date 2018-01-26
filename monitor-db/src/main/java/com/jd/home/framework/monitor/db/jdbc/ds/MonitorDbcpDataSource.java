@@ -1,4 +1,5 @@
 package com.jd.home.framework.monitor.db.jdbc.ds;
+import com.jd.home.framework.monitor.db.enums.DataSourceTypeEnum;
 import org.apache.commons.dbcp.BasicDataSource;
 
 /**
@@ -21,6 +22,10 @@ public class MonitorDbcpDataSource extends AbstractMonitorDataSource {
         return basicDataSource.getMaxActive();
     }
 
+    @Override
+    public DataSourceTypeEnum getDataSourceType() {
+        return DataSourceTypeEnum.DBCP;
+    }
 
     @Override
     protected void refRealDataSource() {
@@ -29,4 +34,5 @@ public class MonitorDbcpDataSource extends AbstractMonitorDataSource {
         }
         basicDataSource = (BasicDataSource)this.targetDataSource;
     }
+
 }

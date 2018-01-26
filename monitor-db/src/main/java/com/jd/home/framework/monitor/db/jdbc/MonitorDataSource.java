@@ -1,4 +1,6 @@
 package com.jd.home.framework.monitor.db.jdbc;
+import com.jd.home.framework.monitor.db.enums.DataSourceTypeEnum;
+
 import javax.sql.DataSource;
 
 /**
@@ -15,6 +17,10 @@ public interface MonitorDataSource extends DataSource{
      */
      int getActiveConnections();
 
-
+    /**
+     * 获取数据源类型
+     * @return
+     */
+     DataSourceTypeEnum getDataSourceType();
 
 }
