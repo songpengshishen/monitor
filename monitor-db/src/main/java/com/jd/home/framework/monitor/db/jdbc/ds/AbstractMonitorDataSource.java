@@ -1,7 +1,10 @@
 package com.jd.home.framework.monitor.db.jdbc.ds;
+import com.jd.home.framework.monitor.db.config.MonitorConfig;
 import com.jd.home.framework.monitor.db.jdbc.MonitorDataSource;
 import com.jd.home.framework.monitor.db.jdbc.connection.MonitorConnectionImpl;
 import com.jd.home.framework.monitor.db.jdbc.wrapper.MonitorWrapperImpl;
+import org.apache.commons.dbcp.BasicDataSource;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -17,16 +20,25 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl implements MonitorDataSource {
 
+    /**
+     * 目标数据源
+     */
     protected DataSource targetDataSource;
+
+    /**
+     * 监控配置,没有配置使用默认的
+     */
+    protected MonitorConfig monitorConfig = new MonitorConfig();
+
 
     @Override
     public Connection getConnection() throws SQLException {
-        return new MonitorConnectionImpl(targetDataSource.getConnection());
+        return new MonitorConnectionImpl(targetDataSource.getConnection(),monitorConfig);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return new MonitorConnectionImpl(targetDataSource.getConnection(username,password));
+        return new MonitorConnectionImpl(targetDataSource.getConnection(username,password),monitorConfig);
     }
 
     @Override
@@ -54,11 +66,25 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
         return targetDataSource.getParentLogger();
     }
 
+    public MonitorConfig getMonitorConfig() {
+        return monitorConfig;
+    }
+
+    public void setMonitorConfig(MonitorConfig monitorConfig) {
+        this.monitorConfig = monitorConfig;
+    }
+
     public DataSource getTargetDataSource() {
         return targetDataSource;
     }
 
     public void setTargetDataSource(DataSource targetDataSource) {
         this.targetDataSource = targetDataSource;
+        refRealDataSource();
     }
+
+    /**
+     * 引用真实的数据源,子类实现
+     */
+    protected abstract void refRealDataSource();
 }

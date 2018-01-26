@@ -1,4 +1,5 @@
 package com.jd.home.framework.monitor.db.jdbc.preparedstatement;
+import com.jd.home.framework.monitor.db.config.MonitorConfig;
 import com.jd.home.framework.monitor.db.jdbc.MonitorPreparedStatement;
 import com.jd.home.framework.monitor.db.jdbc.wrapper.MonitorWrapperImpl;
 
@@ -19,6 +20,9 @@ import java.util.Calendar;
 public abstract class AbstractMonitorPreparedStatement extends MonitorWrapperImpl implements MonitorPreparedStatement {
 
     protected PreparedStatement preparedStatement;
+
+    protected MonitorConfig monitorConfig;
+
 
     @Override
     public ResultSet executeQuery() throws SQLException {

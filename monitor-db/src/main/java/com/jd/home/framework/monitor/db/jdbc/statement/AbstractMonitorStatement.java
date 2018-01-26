@@ -1,4 +1,5 @@
 package com.jd.home.framework.monitor.db.jdbc.statement;
+import com.jd.home.framework.monitor.db.config.MonitorConfig;
 import com.jd.home.framework.monitor.db.jdbc.MonitorStatement;
 import com.jd.home.framework.monitor.db.jdbc.wrapper.MonitorWrapperImpl;
 
@@ -14,6 +15,8 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
 
     protected Statement targetStatement;
 
+    protected MonitorConfig monitorConfig;
+
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
         return null;
@@ -26,62 +29,62 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
 
     @Override
     public void close() throws SQLException {
-
+        targetStatement.close();
     }
 
     @Override
     public int getMaxFieldSize() throws SQLException {
-        return 0;
+        return targetStatement.getMaxFieldSize();
     }
 
     @Override
     public void setMaxFieldSize(int max) throws SQLException {
-
+        targetStatement.setMaxFieldSize(max);
     }
 
     @Override
     public int getMaxRows() throws SQLException {
-        return 0;
+        return targetStatement.getMaxRows();
     }
 
     @Override
     public void setMaxRows(int max) throws SQLException {
-
+        targetStatement.setMaxRows(max);
     }
 
     @Override
     public void setEscapeProcessing(boolean enable) throws SQLException {
-
+        targetStatement.setEscapeProcessing(enable);
     }
 
     @Override
     public int getQueryTimeout() throws SQLException {
-        return 0;
+        return targetStatement.getQueryTimeout();
     }
 
     @Override
     public void setQueryTimeout(int seconds) throws SQLException {
-
+        targetStatement.setQueryTimeout(seconds);
     }
 
     @Override
     public void cancel() throws SQLException {
-
+        targetStatement.cancel();
     }
 
     @Override
     public SQLWarning getWarnings() throws SQLException {
-        return null;
+        return targetStatement.getWarnings();
     }
 
     @Override
     public void clearWarnings() throws SQLException {
-
+        targetStatement.clearWarnings();
     }
 
     @Override
     public void setCursorName(String name) throws SQLException {
-
+        targetStatement.setCursorName(name);
     }
 
     @Override
@@ -91,57 +94,57 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return null;
+        return targetStatement.getResultSet();
     }
 
     @Override
     public int getUpdateCount() throws SQLException {
-        return 0;
+        return targetStatement.getUpdateCount();
     }
 
     @Override
     public boolean getMoreResults() throws SQLException {
-        return false;
+        return targetStatement.getMoreResults();
     }
 
     @Override
     public void setFetchDirection(int direction) throws SQLException {
-
+        targetStatement.setFetchDirection(direction);
     }
 
     @Override
     public int getFetchDirection() throws SQLException {
-        return 0;
+        return targetStatement.getFetchDirection();
     }
 
     @Override
     public void setFetchSize(int rows) throws SQLException {
-
+        targetStatement.setFetchSize(rows);
     }
 
     @Override
     public int getFetchSize() throws SQLException {
-        return 0;
+        return targetStatement.getFetchSize();
     }
 
     @Override
     public int getResultSetConcurrency() throws SQLException {
-        return 0;
+        return targetStatement.getResultSetConcurrency();
     }
 
     @Override
     public int getResultSetType() throws SQLException {
-        return 0;
+        return targetStatement.getResultSetType();
     }
 
     @Override
     public void addBatch(String sql) throws SQLException {
-
+        targetStatement.addBatch(sql);
     }
 
     @Override
     public void clearBatch() throws SQLException {
-
+        targetStatement.clearBatch();
     }
 
     @Override
@@ -151,17 +154,17 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
 
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+        return targetStatement.getConnection();
     }
 
     @Override
     public boolean getMoreResults(int current) throws SQLException {
-        return false;
+        return targetStatement.getMoreResults();
     }
 
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        return null;
+        return targetStatement.getGeneratedKeys();
     }
 
     @Override
@@ -196,32 +199,32 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
 
     @Override
     public int getResultSetHoldability() throws SQLException {
-        return 0;
+        return targetStatement.getResultSetHoldability();
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return false;
+        return targetStatement.isClosed();
     }
 
     @Override
     public void setPoolable(boolean poolable) throws SQLException {
-
+        targetStatement.setPoolable(poolable);
     }
 
     @Override
     public boolean isPoolable() throws SQLException {
-        return false;
+        return targetStatement.isPoolable();
     }
 
     @Override
     public void closeOnCompletion() throws SQLException {
-
+        targetStatement.closeOnCompletion();
     }
 
     @Override
     public boolean isCloseOnCompletion() throws SQLException {
-        return false;
+        return targetStatement.isCloseOnCompletion();
     }
 
 

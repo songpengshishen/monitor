@@ -1,5 +1,7 @@
 package com.jd.home.framework.monitor.db.jdbc.statement;
 
+import com.jd.home.framework.monitor.db.config.MonitorConfig;
+
 import java.sql.Statement;
 
 /**
@@ -10,7 +12,12 @@ import java.sql.Statement;
  */
 public class MonitorStatementImpl extends AbstractMonitorStatement {
 
-    public MonitorStatementImpl(Statement statement){
+
+
+    public MonitorStatementImpl(Statement statement,MonitorConfig config) {
         this.targetStatement = statement;
+        this.monitorConfig = config;
     }
+
+
 }

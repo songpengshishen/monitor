@@ -1,5 +1,5 @@
 package com.jd.home.framework.monitor.db.jdbc.connection;
-
+import com.jd.home.framework.monitor.db.config.MonitorConfig;
 import java.sql.Connection;
 
 /**
@@ -10,10 +10,10 @@ import java.sql.Connection;
  */
 public class MonitorConnectionImpl extends AbstractMonitorConnection {
 
-    public MonitorConnectionImpl(Connection connection){
+    public MonitorConnectionImpl(Connection connection,MonitorConfig config){
         this.targetConnection = connection;
+        this.monitorConfig = config;
     }
-
 
 
 }
