@@ -1,8 +1,7 @@
 package com.jd.home.framework.monitor.db.jdbc.preparedstatement;
-import com.jd.home.framework.monitor.db.config.MonitorConfig;
+import com.jd.home.framework.monitor.db.core.DBMonitor;
 import com.jd.home.framework.monitor.db.jdbc.MonitorPreparedStatement;
 import com.jd.home.framework.monitor.db.jdbc.wrapper.MonitorWrapperImpl;
-
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -21,8 +20,7 @@ public abstract class AbstractMonitorPreparedStatement extends MonitorWrapperImp
 
     protected PreparedStatement preparedStatement;
 
-    protected MonitorConfig monitorConfig;
-
+    protected DBMonitor dbMonitor;
 
     @Override
     public ResultSet executeQuery() throws SQLException {

@@ -6,7 +6,7 @@ package com.jd.home.framework.monitor.db.config;
  * @author <a href=mailto:wangsongpeng@jd.com>王宋鹏</a>
  * @since 2018/1/26
  */
-public final class MonitorConfig {
+public class MonitorConfig {
 
     /********************开关配置Start********************/
     /**
@@ -74,4 +74,84 @@ public final class MonitorConfig {
 
     /******************** 指标参数配置 *********************/
 
+
+    public boolean isSqlExceptionEnabled() {
+        return sqlExceptionEnabled;
+    }
+
+    public void setSqlExceptionEnabled(boolean sqlExceptionEnabled) {
+        this.sqlExceptionEnabled = sqlExceptionEnabled;
+    }
+
+    public boolean isSlowSqlEnabled() {
+        return slowSqlEnabled;
+    }
+
+    public void setSlowSqlEnabled(boolean slowSqlEnabled) {
+        this.slowSqlEnabled = slowSqlEnabled;
+    }
+
+    public boolean isTooManyActiveConnEnabled() {
+        return tooManyActiveConnEnabled;
+    }
+
+    public void setTooManyActiveConnEnabled(boolean tooManyActiveConnEnabled) {
+        this.tooManyActiveConnEnabled = tooManyActiveConnEnabled;
+    }
+
+    public String getSqlExceptionKey() {
+        return sqlExceptionKey;
+    }
+
+    public void setSqlExceptionKey(String sqlExceptionKey) {
+        this.sqlExceptionKey = sqlExceptionKey;
+    }
+
+    public String getSlowSqlKey() {
+        return slowSqlKey;
+    }
+
+    public void setSlowSqlKey(String slowSqlKey) {
+        this.slowSqlKey = slowSqlKey;
+    }
+
+    public String getTooManyActiveConnKey() {
+        return tooManyActiveConnKey;
+    }
+
+    public void setTooManyActiveConnKey(String tooManyActiveConnKey) {
+        this.tooManyActiveConnKey = tooManyActiveConnKey;
+    }
+
+    public long getSlowSqlTimeout() {
+        return slowSqlTimeout;
+    }
+
+    public void setSlowSqlTimeout(long slowSqlTimeout) {
+        this.slowSqlTimeout = slowSqlTimeout;
+    }
+
+    public float getMaxActiveConRatio() {
+        return maxActiveConRatio;
+    }
+
+    public void setMaxActiveConRatio(float maxActiveConRatio) {
+        this.maxActiveConRatio = maxActiveConRatio;
+    }
+
+    public boolean isLogDBUrl() {
+        return isLogDBUrl;
+    }
+
+    public void setLogDBUrl(boolean logDBUrl) {
+        isLogDBUrl = logDBUrl;
+    }
+
+    public String getExcludeStatementIds() {
+        return excludeStatementIds;
+    }
+
+    public void setExcludeStatementIds(String excludeStatementIds) {
+        this.excludeStatementIds = excludeStatementIds;
+    }
 }

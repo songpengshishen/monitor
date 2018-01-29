@@ -23,7 +23,7 @@ public class MonitorDruidDataSource extends AbstractMonitorDataSource {
     }
 
     @Override
-    protected void refRealDataSource() {
+    protected void doProcess() {
         if(!(this.targetDataSource instanceof DruidDataSource)){
             throw new IllegalArgumentException("Only Support DruidDataSource");
         }

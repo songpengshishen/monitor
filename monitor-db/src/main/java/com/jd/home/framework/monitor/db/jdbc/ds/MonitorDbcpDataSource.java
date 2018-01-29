@@ -10,7 +10,6 @@ import org.apache.commons.dbcp.BasicDataSource;
  */
 public class MonitorDbcpDataSource extends AbstractMonitorDataSource {
 
-
     private BasicDataSource basicDataSource;
 
     /**
@@ -28,7 +27,7 @@ public class MonitorDbcpDataSource extends AbstractMonitorDataSource {
     }
 
     @Override
-    protected void refRealDataSource() {
+    protected void doProcess() {
         if(!(this.targetDataSource instanceof BasicDataSource)){
             throw new IllegalArgumentException("Only Support BasicDataSource");
         }

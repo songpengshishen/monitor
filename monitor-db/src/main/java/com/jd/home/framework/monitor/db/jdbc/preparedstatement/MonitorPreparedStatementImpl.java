@@ -1,5 +1,7 @@
 package com.jd.home.framework.monitor.db.jdbc.preparedstatement;
-import com.jd.home.framework.monitor.db.config.MonitorConfig;
+
+
+import com.jd.home.framework.monitor.db.core.DBMonitor;
 
 import java.sql.*;
 
@@ -13,9 +15,9 @@ import java.sql.*;
 public class MonitorPreparedStatementImpl extends AbstractMonitorPreparedStatement {
 
 
-    public MonitorPreparedStatementImpl(PreparedStatement preparedStatement,MonitorConfig config){
+    public MonitorPreparedStatementImpl(PreparedStatement preparedStatement,DBMonitor dbMonitor){
         this.preparedStatement = preparedStatement;
-        this.monitorConfig = config;
+        this.dbMonitor = dbMonitor;
     }
 
 

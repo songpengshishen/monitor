@@ -12,13 +12,17 @@ public class SystemConstans {
     /**
      * 最小的慢SQL超时时间，不能小于这个值，以免报警过于频繁。
      */
-    public static final long MIN_SLOW_SQL_TIMEOUT = 20;
+    public static final long MIN_SLOW_SQL_TIMEOUT = 100;
 
 
     /**
      * 最低允许的活跃连接占比。不能过低，以免导致报警过于频繁。
      */
-    public static final float MIN_MAX_ACTIVE_CONNECTION_RATIO = 0.3f;
+    public static final float MIN_MAX_ACTIVE_CONNECTION_RATIO = 0.5f;
 
 
+    /**
+     * 最高活跃连接比例
+     */
+    public static final float MAX_ACTIVE_CONNECTION_RATIO = 1.0f;
 }

@@ -1,5 +1,5 @@
 package com.jd.home.framework.monitor.db.jdbc.statement;
-import com.jd.home.framework.monitor.db.config.MonitorConfig;
+import com.jd.home.framework.monitor.db.core.DBMonitor;
 import com.jd.home.framework.monitor.db.jdbc.MonitorStatement;
 import com.jd.home.framework.monitor.db.jdbc.wrapper.MonitorWrapperImpl;
 
@@ -15,11 +15,11 @@ public abstract class AbstractMonitorStatement extends MonitorWrapperImpl implem
 
     protected Statement targetStatement;
 
-    protected MonitorConfig monitorConfig;
+    protected DBMonitor dbMonitor;
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-        return null;
+        return targetStatement.executeQuery(sql);
     }
 
     @Override
