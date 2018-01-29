@@ -88,6 +88,9 @@ public class DbAccessInterceptor implements Interceptor{
 	 */
 	private String tooManyActiveConnKey = "ql.app.tooMany.active.connection";
 
+	private String  dynamicDataSourceTargetSourceFieldName = "targetDataSources";
+	private String  dynamicDataSourceDefaultSourceFieldName = "resolvedDefaultDataSource";
+
 	/******************** umpKey End********************/
 
 	/******************** 指标参数配置 *********************/
@@ -137,15 +140,16 @@ public class DbAccessInterceptor implements Interceptor{
 			long s = System.currentTimeMillis();
 			Object result = invocation.proceed();
 			long e = System.currentTimeMillis();
-			long d = e-s;
-			//未通过过滤，则直接跳出，不需要监控。
+			//通过过滤，则监控。
 			if(needMonitor){
-				this.doMonitor(d, getMappedStatement(invocation), getParameterObject(invocation) );
+				this.doMonitor(e-s, getMappedStatement(invocation), getParameterObject(invocation) );
 			}
 
 			return result;
 		}catch (Throwable e) {
-			this.sqlExceptionMonitor(e, getMappedStatement(invocation), needMonitor);
+			if(needMonitor){
+				this.sqlExceptionMonitor(e, getMappedStatement(invocation));
+			}
 			throw e;
 		}
 	}
@@ -154,22 +158,12 @@ public class DbAccessInterceptor implements Interceptor{
 	private Object getParameterObject(Invocation invocation){
 		//从运行环境中获取参数。
 		Object[] args = invocation.getArgs();
-		if(args!=null && args.length>1){
-			if(args[1]!=null){
-				return args[1];
-			}
+		if(args != null && args.length > 1){
+			return args[1];
 		}
 		return null;
 	}
 
-	private boolean isExceptionNeedMonitor(Throwable e){
-		Throwable targetException = e;
-		if(e instanceof InvocationTargetException){
-			InvocationTargetException exception = (InvocationTargetException)e;
-			targetException = exception.getTargetException();
-		}
-		return targetException == null;
-	}
 	
 	protected String appendDbUrl(BasicDataSource basicDataSource, String log) {
 		if(basicDataSource!=null && isLogDBUrl){
@@ -313,14 +307,19 @@ public class DbAccessInterceptor implements Interceptor{
 	private MappedStatement getMappedStatement(Invocation invocation){
 		//从运行环境中获取参数。
 		Object[] args = invocation.getArgs();
-		if(args == null || args.length < 1)
-			if(args[0]!=null && args[0] instanceof MappedStatement){
-				return (MappedStatement)args[0];
-			}
+		if(args == null || args.length <= 0){
+			return null;
+		}
+		if(args[0] != null && args[0] instanceof MappedStatement){
+			return (MappedStatement)args[0];
+		}
 		return null;
 	}
 
 	private void doMonitor(long execution, MappedStatement statement, Object parameterObject){
+		if(statement == null){
+			return;
+		}
 		//执行监控逻辑。
 		try{
 			BasicDataSource basicDataSource = this.getBasicDataSource(statement);
@@ -341,7 +340,7 @@ public class DbAccessInterceptor implements Interceptor{
 					if(basicDataSource!=null){
 						int an = basicDataSource.getNumActive();
 						float ratio = (an*1.0f)/basicDataSource.getMaxActive();
-						if(ratio>= this.maxActiveConRatio){
+						if(ratio >= this.maxActiveConRatio){
 							logger.warn(this.appendDbUrl(basicDataSource, "报警key="+maxActiveConRatio+",数据库连接数过多，使用率已经超过了"+(this.maxActiveConRatio*100)+"%, 当前活跃连接数"+basicDataSource.getNumActive()+",允许最大活跃连接数"+basicDataSource.getMaxActive()));
 							Profiler.businessAlarm(tooManyActiveConnKey, "数据库连接数过多，使用率已经超过了"+(this.maxActiveConRatio*100)+"%, 当前活跃连接数"+basicDataSource.getNumActive()+",允许最大活跃连接数"+basicDataSource.getMaxActive());
 						}
@@ -366,45 +365,41 @@ public class DbAccessInterceptor implements Interceptor{
 			try{
 				Field[] fields = dynamicDataSource.getClass().getSuperclass().getDeclaredFields();
 				Field.setAccessible(fields, true);
-				Map<Object, DataSource> map = null;
-				for(Field field : fields){
-					if("resolvedDataSources".equals(field.getName())){
-						map = (Map<Object, DataSource>)field.get(dynamicDataSource);
-						break;
-					}
-				}
+				Map<Object, DataSource> map = (Map<Object, DataSource>)getFieldValue(fields, dynamicDataSourceTargetSourceFieldName, dynamicDataSource);
 				DataSource currentDataSource = null;
-				String s = DynamicDataSourceHolder.getDataSource();
 				if(map != null && map.isEmpty()){
-					currentDataSource = map.get(s);
+					currentDataSource = map.get(DynamicDataSourceHolder.getDataSource());
 				}
-
 				if(currentDataSource == null){
-					for(Field field : fields){
-						if("resolvedDefaultDataSource".equals(field.getName())){
-							currentDataSource = (DataSource)field.get(dynamicDataSource);
-							break;
-						}
-					}
+					currentDataSource = (DataSource)getFieldValue(fields, dynamicDataSourceDefaultSourceFieldName, dynamicDataSource);
 				}
-				if(currentDataSource!=null && currentDataSource instanceof BasicDataSource){
+				if(currentDataSource != null && currentDataSource instanceof BasicDataSource){
 					return (BasicDataSource)currentDataSource;
 				}
 			}catch (Exception e){
-
+				logger.error("获取数据源BasicDataSource异常", e);
 			}
 		}
 		return null;
 	}
 
-	private void sqlExceptionMonitor(Throwable e, MappedStatement statement,  boolean needMonitor){
+	private Object getFieldValue(Field[] fields, String fieldName, Object obj)throws Exception{
+		for(Field field : fields){
+			if(fieldName.equals(field.getName())){
+				return field.get(obj);
+			}
+		}
+		return null;
+	}
+
+	private void sqlExceptionMonitor(Throwable e, MappedStatement statement){
 		Throwable targetException = e;
 		if(e instanceof InvocationTargetException){
 			InvocationTargetException exception = (InvocationTargetException)e;
 			targetException = exception.getTargetException();
 		}
 		//不需要报警
-		if(targetException == null || !needMonitor){
+		if(targetException == null  || statement == null){
 			return;
 		}
 		//sql执行异常报警。
@@ -412,13 +407,12 @@ public class DbAccessInterceptor implements Interceptor{
 		logger.error(this.appendDbUrl(this.getBasicDataSource(statement),"执行SQL异常，报警key="+sqlExceptionKey), e);
 		String[] rootCauseTrackTraceArray = ExceptionUtils.getRootCauseStackTrace(e);
 		StringBuffer rootCauseTrackTrace = new StringBuffer(sqlExceptionKey);
-		if(rootCauseTrackTraceArray!=null || rootCauseTrackTraceArray.length>0){
-			for(int i=0;i<rootCauseTrackTraceArray.length;i++){
+		if(rootCauseTrackTraceArray != null && rootCauseTrackTraceArray.length > 0){
+			for(int i = 0; i< rootCauseTrackTraceArray.length; i++){
 				rootCauseTrackTrace.append(rootCauseTrackTraceArray[i]);
 			}
 		}
 		Profiler.businessAlarm(sqlExceptionKey, "-sql执行异常，ump key= "+rootCauseTrackTrace.toString());
-
 		}
 	}
 }

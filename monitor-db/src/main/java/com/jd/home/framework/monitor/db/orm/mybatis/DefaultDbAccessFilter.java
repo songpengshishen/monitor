@@ -29,6 +29,9 @@ public class DefaultDbAccessFilter implements DbAccessFilter {
 
 	@Override
 	public boolean filter(MappedStatement statement, Object parameterObject) {
+		if(statement == null){
+			return false;
+		}
 		boolean resultExclu = true;
 		if(this.excludedStatements!=null && this.excludedStatements.size()>0){
 			if(this.excludedStatements.contains(statement.getId())){
