@@ -15,9 +15,10 @@ import java.sql.*;
 public class MonitorPreparedStatementImpl extends AbstractMonitorPreparedStatement {
 
 
-    public MonitorPreparedStatementImpl(PreparedStatement preparedStatement,DBMonitor dbMonitor){
+    public MonitorPreparedStatementImpl(PreparedStatement preparedStatement,DBMonitor dbMonitor,String sql){
         this.preparedStatement = preparedStatement;
         this.dbMonitor = dbMonitor;
+        this.sql = sql;
     }
 
 

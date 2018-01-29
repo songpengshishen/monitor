@@ -22,6 +22,11 @@ public abstract class AbstractMonitorPreparedStatement extends MonitorWrapperImp
 
     protected DBMonitor dbMonitor;
 
+    /**
+     * 当前sql
+     */
+    protected String sql;
+
     @Override
     public ResultSet executeQuery() throws SQLException {
         return null;
