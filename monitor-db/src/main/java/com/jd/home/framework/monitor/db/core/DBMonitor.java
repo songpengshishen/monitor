@@ -1,5 +1,5 @@
 package com.jd.home.framework.monitor.db.core;
-import com.jd.home.framework.monitor.db.jdbc.MonitorDataSource;
+
 
 /**
  * Title : DB监控接口
@@ -27,12 +27,16 @@ public interface DBMonitor {
      * 异常的sql监控
      * @param sqlRecord 监控的sql记录
      */
-    void SqlErrorMonitor(SqlRecord sqlRecord);
+    void SqlErrorMonitor(SqlRecord sqlRecord,Throwable t);
 
     /**
-     * 监控当前应用对于DB的活跃连接数.
+     * 打开应用对于当前数据源连接数的监控
      */
-    void activeConnMonitor();
+    void openActiveConnMonitor();
 
+    /**
+     * 关闭连接数监控
+     */
+    void closeActiveConnMonitor();
 
 }

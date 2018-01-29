@@ -13,13 +13,27 @@ public interface MonitorDataSource extends DataSource{
 
     /**
      * 获取当前活跃的连接数
-     * @return
+     * @return 连接数个数
      */
      int getActiveConnections();
 
+
+    /**
+     * 获取最高的活跃的连接数
+     * @return 连接数个数
+     */
+     int getMaxActiveConnections();
+
+
+    /**
+     * 获取数据源连接URL
+     * @return
+     */
+     String getUrl();
+
     /**
      * 获取数据源类型
-     * @return
+     * @return {@link DataSourceTypeEnum}
      */
      DataSourceTypeEnum getDataSourceType();
 

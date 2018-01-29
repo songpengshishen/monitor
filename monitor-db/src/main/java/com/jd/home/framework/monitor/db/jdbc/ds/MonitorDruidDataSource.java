@@ -12,11 +12,32 @@ public class MonitorDruidDataSource extends AbstractMonitorDataSource {
 
     private DruidDataSource druidDataSource;
 
+    /**
+     * 获取当前活跃的连接数
+     * @return
+     */
     @Override
     public int getActiveConnections() {
-        return druidDataSource.getMaxActive();
+        return druidDataSource.getActiveCount();
     }
 
+    /**
+     * 获取当前数据源url
+     * @return
+     */
+    @Override
+    public String getUrl() {
+        return druidDataSource.getUrl();
+    }
+
+    /**
+     * 获取最高活跃的连接数
+     * @return
+     */
+    @Override
+    public int getMaxActiveConnections() {
+        return druidDataSource.getMaxActive();
+    }
     @Override
     public DataSourceTypeEnum getDataSourceType() {
         return DataSourceTypeEnum.DRUID;

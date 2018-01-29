@@ -12,12 +12,31 @@ public class MonitorDbcpDataSource extends AbstractMonitorDataSource {
 
     private BasicDataSource basicDataSource;
 
+
     /**
-     * 获取连接数
+     * 获取当前活跃的连接数
      * @return
      */
     @Override
     public int getActiveConnections() {
+        return basicDataSource.getNumActive();
+    }
+
+    /**
+     * 获取当前数据源url
+     * @return
+     */
+    @Override
+    public String getUrl() {
+        return basicDataSource.getUrl();
+    }
+
+    /**
+     * 获取最高活跃的连接数
+     * @return
+     */
+    @Override
+    public int getMaxActiveConnections() {
         return basicDataSource.getMaxActive();
     }
 

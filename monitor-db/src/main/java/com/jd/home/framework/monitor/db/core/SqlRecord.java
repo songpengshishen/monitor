@@ -38,6 +38,11 @@ public final class SqlRecord {
      */
     public static final int STATE_FALSE = 1;
 
+    /**
+     * 执行异常堆栈
+     */
+    private Throwable throwable;
+
 
     public SqlRecord(String sql){
         this(System.currentTimeMillis(),sql,STATE_FALSE);
@@ -75,5 +80,21 @@ public final class SqlRecord {
 
     public void setSql(String sql) {
         this.sql = sql;
+    }
+
+    public int getProcessState() {
+        return processState;
+    }
+
+    public void setProcessState(int processState) {
+        this.processState = processState;
+    }
+
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
     }
 }

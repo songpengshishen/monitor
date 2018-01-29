@@ -25,4 +25,20 @@ public class SystemConstans {
      * 最高活跃连接比例
      */
     public static final float MAX_ACTIVE_CONNECTION_RATIO = 1.0f;
+
+
+    /**
+     * 半小时的毫秒数
+     */
+    public static final long HALF_HOUR_SECOND = 1800000l;
+
+
+    /**
+     * 10分钟的毫秒数
+     */
+    public static final long FIVE_TEN_SECOND = 300000l;
+
+
+    public static final String DB_MONITOR_CONNECTION_THREAD_NAME = "DB-Monitor-Conn";
+
 }
