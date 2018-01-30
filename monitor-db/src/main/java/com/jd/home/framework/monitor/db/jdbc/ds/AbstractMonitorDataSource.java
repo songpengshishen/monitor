@@ -170,6 +170,7 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
         }
         doProcess();
         dbMonitor = new UmpDBMonitor(this,config);//创建UMPDB监控
+        dbMonitor.openActiveConnMonitor();
     }
 
     /**
