@@ -70,20 +70,19 @@ public class UmpDBMonitor implements DBMonitor {
 
     @Override
     public void SlowSqlMonitorEnd(SqlRecord sqlRecord) {
-        if(this.monitorConfig.isSlowSqlEnabled()){
-            if(sqlRecord.getProcessState()==SqlRecord.STATE_TRUE){
-                 Long elapsedTime = sqlRecord.getElapsedTime();
-                 if(elapsedTime > this.monitorConfig.getSlowSqlTimeout()){
-                     String sql = sqlRecord.getSql();
-                     String info = new StringBuilder("数据库").append(this.monitorDataSource.getUrl()).append("执行过程中出现超时,sql:")
-                             .append(sql).toString();
-                     if (logger.isWarnEnabled()) {
-                         logger.warn(info);
-                     }
-                     sqlRecord.setProcessState(SqlRecord.STATE_TRUE);
-                     sendUmp(this.monitorConfig.getSlowSqlKey(),info);
-                 }
+        if (this.monitorConfig.isSlowSqlEnabled()) {
+            Long elapsedTime = sqlRecord.getElapsedTime();
+            if (elapsedTime > this.monitorConfig.getSlowSqlTimeout()) {
+                String sql = sqlRecord.getSql();
+                String info = new StringBuilder("数据库").append(this.monitorDataSource.getUrl()).append("执行过程中出现超时,sql:")
+                        .append(sql).toString();
+                if (logger.isWarnEnabled()) {
+                    logger.warn(info);
+                }
+                sqlRecord.setProcessState(SqlRecord.STATE_TRUE);
+                sendUmp(this.monitorConfig.getSlowSqlKey(), info);
             }
+
         }
     }
 
