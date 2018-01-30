@@ -29,7 +29,7 @@ public class MonitorDbcpDataSourceTest extends MonitorDataSourceTest<MonitorDbcp
         Connection connection =  dataSource.getConnection();
         Statement statement =  connection.createStatement();
         String sql = "insert into sequence_value (uid,name,id)value(0,\"test\",1);";
-        boolean flag =  statement.execute(sql);
+        int flag =  statement.executeUpdate(sql);
         System.out.println(flag);
     }
 
@@ -38,8 +38,18 @@ public class MonitorDbcpDataSourceTest extends MonitorDataSourceTest<MonitorDbcp
     public void update()throws Exception{
         Connection connection =  dataSource.getConnection();
         Statement statement =  connection.createStatement();
-        String sql = "insert into sequence_value (uid,name,id)value(0,\"test\",1);";
-        boolean flag =  statement.execute(sql);
+        String sql = "update sequence_value set name = 'haha' where uid = 48";
+        int flag =  statement.executeUpdate(sql);
+        System.out.println(flag);
+    }
+
+
+    @Test
+    public void delete()throws Exception{
+        Connection connection =  dataSource.getConnection();
+        Statement statement =  connection.createStatement();
+        String sql = "delete from sequence_value where uid = 48";
+        int flag =  statement.executeUpdate(sql);
         System.out.println(flag);
     }
 

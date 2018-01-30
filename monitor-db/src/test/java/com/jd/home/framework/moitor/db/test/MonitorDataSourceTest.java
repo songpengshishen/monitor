@@ -1,4 +1,5 @@
 package com.jd.home.framework.moitor.db.test;
+import org.junit.After;
 import org.junit.Before;
 
 
@@ -12,10 +13,19 @@ public abstract class MonitorDataSourceTest<T> {
 
     protected T dataSource;
 
+    private Long startTime;
 
     @Before
     public void before(){
+        startTime = System.currentTimeMillis();
         dataSource =  createDataSource();
+    }
+
+
+
+    @After
+    public void after(){
+        System.out.println("执行耗时: " + (System.currentTimeMillis() - startTime));
     }
 
 
