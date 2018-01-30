@@ -38,7 +38,17 @@ public class SystemConstans {
      */
     public static final long FIVE_TEN_SECOND = 300000l;
 
-
+    /**
+     * DB监控线程名称
+     */
     public static final String DB_MONITOR_CONNECTION_THREAD_NAME = "DB-Monitor-Conn";
 
+    /**
+     * 开关打开值
+     */
+    public static final String SWITCH_OPEN_VALUE = "true";
+    /**
+     * 开关关闭值
+     */
+    public static final String SWITCH_CLOSE_VALUE = "false";
 }

@@ -12,7 +12,6 @@ public class MonitorDbcpDataSource extends AbstractMonitorDataSource {
 
     private BasicDataSource basicDataSource;
 
-
     /**
      * 获取当前活跃的连接数
      * @return

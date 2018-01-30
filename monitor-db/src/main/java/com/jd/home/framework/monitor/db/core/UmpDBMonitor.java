@@ -95,7 +95,6 @@ public class UmpDBMonitor implements DBMonitor {
     @Override
     public void SqlErrorMonitor(SqlRecord sqlRecord,Throwable t) {
         if(this.monitorConfig.isSqlExceptionEnabled()){
-            sqlRecord.setProcessState(SqlRecord.STATE_FALSE);
             String sql = sqlRecord.getSql();
             String info = new StringBuilder("数据库").append(this.monitorDataSource.getUrl()).append("执行错误的sql:")
                     .append(sql).append("异常信息:").append(t).toString();

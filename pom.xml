@@ -29,6 +29,8 @@
         <ump.version>4.0.3</ump.version>
         <commons.beanutils.version>1.8.3</commons.beanutils.version>
         <druid.version>1.0.5</druid.version>
+        <junit.version>4.12</junit.version>
+        <mysql.jdbc.version>5.1.5</mysql.jdbc.version>
     </properties>
 
 
@@ -81,6 +83,18 @@
                 <artifactId>druid</artifactId>
                 <version>${druid.version}</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.jdbc.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -93,6 +107,14 @@
         <dependency>
             <groupId>com.jd.ump</groupId>
             <artifactId>profiler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
 

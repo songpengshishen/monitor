@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 
@@ -29,29 +30,27 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
      */
     protected DataSource targetDataSource;
 
-
     /**
      * DB监控
      */
     protected DBMonitor dbMonitor;
 
 
-
     /********************配置项Start********************/
     /**
      * SQL执行异常报警开关。
      */
-    private boolean sqlExceptionEnabled;
+    private String sqlExceptionEnabled;
 
     /**
      * 慢SQL报警开关。
      */
-    private boolean slowSqlEnabled;
+    private String slowSqlEnabled;
 
     /**
      * 连接数过多报警开关。
      */
-    private boolean tooManyActiveConnEnabled;
+    private String tooManyActiveConnEnabled;
 
     /**
      * SQL执行异常UMP报警的key。
@@ -72,19 +71,16 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
     /**
      * 慢SQL执行超时时间，单位是毫秒。
      */
-    private long slowSqlTimeout = 1000;
+    private long slowSqlTimeout;
 
 
     /**
      * 连接数过多报警。活跃连接占比允许的最大值，超过该值将会报警。
      */
-    private float maxActiveConRatio = 0.7f;
+    private float maxActiveConRatio;
 
 
     /********************配置项End********************/
-
-
-
 
 
     @Override
@@ -131,6 +127,70 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
         this.targetDataSource = targetDataSource;
     }
 
+    public String getSqlExceptionEnabled() {
+        return sqlExceptionEnabled;
+    }
+
+    public void setSqlExceptionEnabled(String sqlExceptionEnabled) {
+        this.sqlExceptionEnabled = sqlExceptionEnabled;
+    }
+
+    public String getSlowSqlEnabled() {
+        return slowSqlEnabled;
+    }
+
+    public void setSlowSqlEnabled(String slowSqlEnabled) {
+        this.slowSqlEnabled = slowSqlEnabled;
+    }
+
+    public String getTooManyActiveConnEnabled() {
+        return tooManyActiveConnEnabled;
+    }
+
+    public void setTooManyActiveConnEnabled(String tooManyActiveConnEnabled) {
+        this.tooManyActiveConnEnabled = tooManyActiveConnEnabled;
+    }
+
+    public String getSqlExceptionKey() {
+        return sqlExceptionKey;
+    }
+
+    public void setSqlExceptionKey(String sqlExceptionKey) {
+        this.sqlExceptionKey = sqlExceptionKey;
+    }
+
+    public String getSlowSqlKey() {
+        return slowSqlKey;
+    }
+
+    public void setSlowSqlKey(String slowSqlKey) {
+        this.slowSqlKey = slowSqlKey;
+    }
+
+    public String getTooManyActiveConnKey() {
+        return tooManyActiveConnKey;
+    }
+
+    public void setTooManyActiveConnKey(String tooManyActiveConnKey) {
+        this.tooManyActiveConnKey = tooManyActiveConnKey;
+    }
+
+    public long getSlowSqlTimeout() {
+        return slowSqlTimeout;
+    }
+
+    public void setSlowSqlTimeout(long slowSqlTimeout) {
+        this.slowSqlTimeout = slowSqlTimeout;
+    }
+
+    public float getMaxActiveConRatio() {
+        return maxActiveConRatio;
+    }
+
+    public void setMaxActiveConRatio(float maxActiveConRatio) {
+        this.maxActiveConRatio = maxActiveConRatio;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
       init();
@@ -141,11 +201,43 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
      * 初始化
      */
     public void init(){
+        Objects.requireNonNull(targetDataSource,"targetDataSource Not Null!");
+        MonitorConfig config = createMonitorConfig();
+        doProcess();
+        dbMonitor = new UmpDBMonitor(this,config);//创建UMPDB监控
+        dbMonitor.openActiveConnMonitor();
+    }
+
+    /**
+     * 加工处理,交给子类实现
+     */
+    protected abstract void doProcess();
+
+
+
+    /**
+     * 创建监控配置
+     *
+     * @return
+     */
+    private MonitorConfig createMonitorConfig(){
         MonitorConfig config = new MonitorConfig(); //创建监控配置
         //设置开关
-        config.setSqlExceptionEnabled(this.sqlExceptionEnabled);
-        config.setSlowSqlEnabled(this.slowSqlEnabled);
-        config.setTooManyActiveConnEnabled(this.tooManyActiveConnEnabled);
+        if(StringUtils.isNotBlank(this.sqlExceptionEnabled) &&
+                (this.sqlExceptionEnabled.equalsIgnoreCase(SystemConstans.SWITCH_OPEN_VALUE) ||
+                        this.sqlExceptionEnabled.equalsIgnoreCase(SystemConstans.SWITCH_CLOSE_VALUE))){
+            config.setSqlExceptionEnabled(Boolean.valueOf(this.sqlExceptionEnabled));
+        }
+        if(StringUtils.isNotBlank(this.slowSqlEnabled) &&
+                (this.slowSqlEnabled.equalsIgnoreCase(SystemConstans.SWITCH_OPEN_VALUE) ||
+                        this.slowSqlEnabled.equalsIgnoreCase(SystemConstans.SWITCH_CLOSE_VALUE))){
+            config.setSlowSqlEnabled(Boolean.valueOf(this.slowSqlEnabled));
+        }
+        if(StringUtils.isNotBlank(this.tooManyActiveConnEnabled) &&
+                (this.tooManyActiveConnEnabled.equalsIgnoreCase(SystemConstans.SWITCH_OPEN_VALUE) ||
+                        this.tooManyActiveConnEnabled.equalsIgnoreCase(SystemConstans.SWITCH_CLOSE_VALUE))){
+            config.setTooManyActiveConnEnabled(Boolean.valueOf(this.tooManyActiveConnEnabled));
+        }
         //设置umpKey
         if(StringUtils.isNotBlank(this.sqlExceptionKey)){
             config.setSqlExceptionKey(this.sqlExceptionKey);
@@ -168,13 +260,8 @@ public abstract class AbstractMonitorDataSource extends MonitorWrapperImpl imple
                 config.setMaxActiveConRatio(this.maxActiveConRatio);
             }
         }
-        doProcess();
-        dbMonitor = new UmpDBMonitor(this,config);//创建UMPDB监控
-        dbMonitor.openActiveConnMonitor();
+        return config;
     }
 
-    /**
-     * 加工处理,交给子类实现
-     */
-    protected abstract void doProcess();
+
 }
