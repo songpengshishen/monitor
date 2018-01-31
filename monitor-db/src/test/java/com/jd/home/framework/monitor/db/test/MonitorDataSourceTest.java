@@ -1,4 +1,4 @@
-package com.jd.home.framework.moitor.db.test;
+package com.jd.home.framework.monitor.db.test;
 import org.junit.After;
 import org.junit.Before;
 

@@ -1,4 +1,4 @@
-package com.jd.home.framework.moitor.db.test;
+package com.jd.home.framework.monitor.db.test;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.jd.home.framework.monitor.db.jdbc.ds.MonitorDruidDataSource;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import java.sql.Statement;
  * @author wsp
  * @since 2018/01/30
  */
-public class MonitoDruidDataSourceTest extends MonitorDataSourceTest<MonitorDruidDataSource>{
+public class MonitorDruidDataSourceTest extends MonitorDataSourceTest<MonitorDruidDataSource>{
 
 
     @Test

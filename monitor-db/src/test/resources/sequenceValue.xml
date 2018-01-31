@@ -1,0 +1,50 @@
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SequenceValue">
+    <typeAlias alias="sequencevalue" type="com.jd.home.framework.monitor.db.test.dao.ibatis.SequenceValue"/>
+
+
+    <sql id="allColumns">
+        UID,
+        NAME,
+        ID
+    </sql>
+
+    <resultMap id="sequencevalueResMap" class="sequencevalue">
+        <result property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+        <result property="uid" column="UID"/>
+    </resultMap>
+
+    <insert id="insert" parameterClass="sequencevalue">
+        insert into sequence_value
+        (<include refid="allColumns"/>)
+        values(
+        #uid#,
+        #name#,
+        #id#
+        )
+    </insert>
+
+
+    <select id="select" parameterClass="java.lang.Long" resultMap="sequencevalueResMap">
+        SELECT COUNT(1)
+        FROM sequence_value
+        WHERE UID = #uid#
+    </select>
+
+
+    <update id="update" parameterClass="sequencevalue">
+        UPDATE sequence_value
+        SET NAME = #name#
+        WHERE UID = #uid#
+    </update>
+
+
+    <delete id="delete" parameterClass="java.lang.Long">
+        DELETE from sequence_value WHERE UID = #uid#
+    </delete>
+
+
+</sqlMap>

@@ -1,4 +1,4 @@
-package com.jd.home.framework.moitor.db.test;
+package com.jd.home.framework.monitor.db.test;
 import com.jd.home.framework.monitor.db.jdbc.ds.MonitorDbcpDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.Test;

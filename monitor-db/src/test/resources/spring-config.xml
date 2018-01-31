@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+	   default-lazy-init="false" default-autowire="byName">
+
+	<context:component-scan base-package="com.jd.home.framework.monitor" >
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean id="popAuctionDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://192.168.195.161:3306/pop_auction" />
+		<property name="username" value="admin" />
+		<property name="password" value="admin" />
+		<property name="initialSize" value="0" />
+		<property name="maxActive" value="15" />
+		<property name="maxIdle" value="5" />
+		<property name="minIdle" value="2" />
+		<property name="maxWait" value="15000" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="180000" />
+		<property name="removeAbandoned" value="true"/>
+		<property name="removeAbandonedTimeout" value="300"/>
+	</bean>
+
+
+	<bean id="monitorAuctionDbcpDataSource" class="com.jd.home.framework.monitor.db.jdbc.ds.MonitorDbcpDataSource">
+		<property name="targetDataSource" ref="popAuctionDataSource"></property>
+		<property name="slowSqlEnabled" value="true"></property>
+		<property name="slowSqlTimeout" value="300"></property>
+		<property name="slowSqlKey" value="auction.center.slow.sql.key"></property>
+	</bean>
+
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocations">
+			<list>
+				<value>classpath:sqlmap-config-auction.xml</value>
+			</list>
+		</property>
+		<property name="dataSource" ref="monitorAuctionDbcpDataSource" />
+	</bean>
+
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="monitorAuctionDbcpDataSource" />
+	</bean>
+
+</beans>
