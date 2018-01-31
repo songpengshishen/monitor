@@ -1,8 +1,6 @@
 package com.jd.home.framework.moitor.db.test;
 import com.alibaba.druid.pool.DruidDataSource;
-import com.jd.home.framework.monitor.db.jdbc.ds.MonitorDbcpDataSource;
 import com.jd.home.framework.monitor.db.jdbc.ds.MonitorDruidDataSource;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.Test;
 import javax.sql.DataSource;
 import java.sql.Connection;
