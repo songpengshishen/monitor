@@ -132,7 +132,7 @@ public class UmpDBMonitor implements DBMonitor {
                                         return t;
                                     }
                                 });
-                            /*需要应用预热下,半小时在启动监控连接数,每10分钟监听次*/
+                                /*需要应用预热下,半小时在启动监控连接数,每10分钟监听次*/
                                 scheduledExecutorService.scheduleWithFixedDelay(new MonitorActiveConnTask(),initialDelay,period, TimeUnit.MILLISECONDS);
                                 started = true;
                             }
