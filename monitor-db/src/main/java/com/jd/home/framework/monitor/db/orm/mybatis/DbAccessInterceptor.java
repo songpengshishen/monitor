@@ -75,18 +75,18 @@ public class DbAccessInterceptor implements Interceptor{
 	/**
 	 * SQL执行异常UMP报警的key。
 	 */
-	private String sqlExceptionKey = "ql.app.sql.exception";
+	private String sqlExceptionKey = "home.app.sql.exception";
 	
 	/**
 	 * SQL执行异常UMP报警的key。
 	 */
-	private String slowSqlKey = "ql.app.slowsql.timeout";
+	private String slowSqlKey = "home.app.slowsql.timeout";
 
 
 	/**
 	 * 连接数过多UMP报警的key。
 	 */
-	private String tooManyActiveConnKey = "ql.app.tooMany.active.connection";
+	private String tooManyActiveConnKey = "home.app.tooMany.active.connection";
 
 	private String  dynamicDataSourceTargetSourceFieldName = "targetDataSources";
 	private String  dynamicDataSourceDefaultSourceFieldName = "resolvedDefaultDataSource";
