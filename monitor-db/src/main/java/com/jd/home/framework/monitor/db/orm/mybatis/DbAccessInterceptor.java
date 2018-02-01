@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
@@ -88,8 +89,7 @@ public class DbAccessInterceptor implements Interceptor{
 	 */
 	private String tooManyActiveConnKey = "home.app.tooMany.active.connection";
 
-	private String  dynamicDataSourceTargetSourceFieldName = "targetDataSources";
-	private String  dynamicDataSourceDefaultSourceFieldName = "resolvedDefaultDataSource";
+
 
 	/******************** umpKey End********************/
 
@@ -128,6 +128,7 @@ public class DbAccessInterceptor implements Interceptor{
 	 */
 	private DbAccessFilter filter = new DefaultDbAccessFilter();
 
+	private String determineTargetDataSourceMethod = "determineTargetDataSource";
 
 
 
@@ -363,16 +364,11 @@ public class DbAccessInterceptor implements Interceptor{
 		if(dataSource!=null && dataSource instanceof DynamicDataSource){
 			DynamicDataSource dynamicDataSource = (DynamicDataSource)dataSource;
 			try{
-				Field[] fields = dynamicDataSource.getClass().getSuperclass().getDeclaredFields();
-				Field.setAccessible(fields, true);
-				Map<Object, DataSource> map = (Map<Object, DataSource>)getFieldValue(fields, dynamicDataSourceTargetSourceFieldName, dynamicDataSource);
-				DataSource currentDataSource = null;
-				if(map != null && map.isEmpty()){
-					currentDataSource = map.get(DynamicDataSourceHolder.getDataSource());
-				}
-				if(currentDataSource == null){
-					currentDataSource = (DataSource)getFieldValue(fields, dynamicDataSourceDefaultSourceFieldName, dynamicDataSource);
-				}
+				//获取动态数据源获取数据源的方法
+				Method method = dynamicDataSource.getClass().getSuperclass().getDeclaredMethod(determineTargetDataSourceMethod);
+				method.setAccessible(true);
+				//反射获取数据源
+				DataSource currentDataSource = (DataSource)method.invoke(dynamicDataSource, (Object[])null);
 				if(currentDataSource != null && currentDataSource instanceof BasicDataSource){
 					return (BasicDataSource)currentDataSource;
 				}
@@ -383,14 +379,6 @@ public class DbAccessInterceptor implements Interceptor{
 		return null;
 	}
 
-	private Object getFieldValue(Field[] fields, String fieldName, Object obj)throws Exception{
-		for(Field field : fields){
-			if(fieldName.equals(field.getName())){
-				return field.get(obj);
-			}
-		}
-		return null;
-	}
 
 	private void sqlExceptionMonitor(Throwable e, MappedStatement statement){
 		Throwable targetException = e;
