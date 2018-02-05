@@ -2,7 +2,7 @@ package com.jd.home.framework.monitor.db.jdbc.ds;
 import com.jd.home.framework.monitor.db.config.MonitorConfig;
 import com.jd.home.framework.monitor.db.config.SystemConstans;
 import com.jd.home.framework.monitor.db.core.DBMonitor;
-import com.jd.home.framework.monitor.db.core.UmpDBMonitor;
+import com.jd.home.framework.monitor.db.core.ump.UmpDBMonitor;
 import com.jd.home.framework.monitor.db.jdbc.MonitorDataSource;
 import com.jd.home.framework.monitor.db.jdbc.connection.MonitorConnectionImpl;
 import com.jd.home.framework.monitor.db.jdbc.wrapper.MonitorWrapperImpl;

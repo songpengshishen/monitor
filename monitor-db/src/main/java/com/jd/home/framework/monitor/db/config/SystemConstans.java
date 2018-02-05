@@ -44,6 +44,11 @@ public class SystemConstans {
     public static final String DB_MONITOR_CONNECTION_THREAD_NAME = "DB-Monitor-Conn";
 
     /**
+     * 发送UMP信息线程
+     */
+    public static final String SEND_UMP_THREAD_NAME = "UMP-Send";
+
+    /**
      * 开关打开值
      */
     public static final String SWITCH_OPEN_VALUE = "true";
@@ -51,4 +56,9 @@ public class SystemConstans {
      * 开关关闭值
      */
     public static final String SWITCH_CLOSE_VALUE = "false";
+
+    /**
+     * ump消息的最高次数
+     */
+    public static final int MAX_STORE_UMP_MSG = 20000;
 }

@@ -1,20 +1,18 @@
-package com.jd.home.framework.monitor.db.core;
+package com.jd.home.framework.monitor.db.core.ump;
 import com.jd.home.framework.monitor.db.config.MonitorConfig;
 import com.jd.home.framework.monitor.db.config.SystemConstans;
+import com.jd.home.framework.monitor.db.core.DBMonitor;
+import com.jd.home.framework.monitor.db.core.SqlRecord;
 import com.jd.home.framework.monitor.db.jdbc.MonitorDataSource;
 import com.jd.ump.profiler.proxy.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Title : 基于UMP的DB监控
  * Description: 监控的指标发送至UMP平台</br>
- *
  * @author <a href=mailto:wangsongpeng@jd.com>王宋鹏</a>
  * @since 2018/1/29
  */
@@ -32,16 +30,22 @@ public class UmpDBMonitor implements DBMonitor {
      */
     private MonitorDataSource monitorDataSource;
 
+    /**
+     * UMP存储
+     */
+    private UmpStore umpStore = new UmpStore();
 
     /**
      * 是否已经启动监控连接的任务
      */
     private volatile boolean started = Boolean.FALSE;
 
+
     /**
      * JDK任务调度
      */
     private volatile ScheduledExecutorService scheduledExecutorService;
+
 
     /**
      * 延迟多久后执行任务,毫秒
@@ -80,6 +84,9 @@ public class UmpDBMonitor implements DBMonitor {
                     logger.warn(info);
                 }
                 sqlRecord.setProcessState(SqlRecord.STATE_TRUE);
+
+                Ump ump = new Ump();
+
                 sendUmp(this.monitorConfig.getSlowSqlKey(), info);
             }
 
@@ -163,6 +170,10 @@ public class UmpDBMonitor implements DBMonitor {
             started = false;
         }
     }
+
+
+
+
 
     /**
      * 发送至UMP平台
