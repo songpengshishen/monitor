@@ -26,7 +26,16 @@ public class Ump {
     private Date date;
 
 
+    public Ump(String key,String info){
+        this(key,info,new Date());
+    }
 
+
+    public Ump(String key,String info,Date date){
+        this.key = key;
+        this.info = info;
+        this.date = date;
+    }
 
 
     public String getKey() {

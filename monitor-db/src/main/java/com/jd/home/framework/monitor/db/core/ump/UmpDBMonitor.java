@@ -84,10 +84,8 @@ public class UmpDBMonitor implements DBMonitor {
                     logger.warn(info);
                 }
                 sqlRecord.setProcessState(SqlRecord.STATE_TRUE);
-
-                Ump ump = new Ump();
-
-                sendUmp(this.monitorConfig.getSlowSqlKey(), info);
+                Ump ump = new Ump(this.monitorConfig.getSlowSqlKey(),info);
+                umpStore.storeUmp(ump);
             }
 
         }
@@ -109,7 +107,8 @@ public class UmpDBMonitor implements DBMonitor {
             }
             sqlRecord.setProcessState(SqlRecord.STATE_FALSE);
             sqlRecord.setThrowable(t);
-            sendUmp(this.monitorConfig.getSqlExceptionKey(),info);
+            Ump ump = new Ump(this.monitorConfig.getSqlExceptionKey(),info);
+            umpStore.storeUmp(ump);
         }
     }
 
@@ -174,17 +173,6 @@ public class UmpDBMonitor implements DBMonitor {
 
 
 
-
-    /**
-     * 发送至UMP平台
-     * @param key
-     * @param info
-     */
-    private void sendUmp(String key, String info) {
-        Profiler.businessAlarm(key, new Date().getTime(), info);
-    }
-
-
     /**
      * 监控数据源活跃连接任务
      */
@@ -205,7 +193,9 @@ public class UmpDBMonitor implements DBMonitor {
                     if (logger.isWarnEnabled()) {
                         logger.warn(info);
                     }
-                    sendUmp(config.getTooManyActiveConnKey(),info);
+
+                    Ump ump = new Ump(config.getTooManyActiveConnKey(),info);
+                    umpStore.storeUmp(ump);
                 }
             }catch (Exception e){
                 ;

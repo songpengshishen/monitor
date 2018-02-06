@@ -16,6 +16,7 @@ public class UmpStore {
 
     private static Logger logger = LoggerFactory.getLogger(UmpStore.class);
 
+
     public UmpStore(){
          Thread  t1 = new Thread(new SendUmpThread(),SystemConstans.SEND_UMP_THREAD_NAME);
          t1.setDaemon(true);
@@ -70,7 +71,7 @@ public class UmpStore {
                         sendUmp(ump);
                         UmpStore.this.counter.decrementAndGet();
                     }else{
-                        Thread.sleep(100l);
+                        Thread.sleep(1000l);
                     }
                 }catch (InterruptedException e1){
                     logger.error("Thread : " + Thread.currentThread().getName() + "InterruptedException!");
