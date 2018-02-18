@@ -1,26 +1,34 @@
 package com.jd.home.framework.monitor.db.test;
+import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 
 /**
  * 监控DataSource测试
  * @author wsp
  * @since 2018/01/30
+ *
  */
-public abstract class MonitorDataSourceTest<T> {
+public abstract class MonitorDataSourceTest {
 
 
-    protected T dataSource;
+    protected DataSource dataSource;
 
     private Long startTime;
 
     @Before
     public void before(){
         startTime = System.currentTimeMillis();
-        dataSource =  createDataSource();
+        dataSource =  createMonitorDataSource();
     }
-
 
 
     @After
@@ -29,7 +37,9 @@ public abstract class MonitorDataSourceTest<T> {
     }
 
 
-    protected abstract T createDataSource();
+
+
+    protected abstract DataSource createMonitorDataSource();
 
 
 }

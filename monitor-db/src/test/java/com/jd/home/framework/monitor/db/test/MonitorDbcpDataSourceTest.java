@@ -1,111 +1,132 @@
 package com.jd.home.framework.monitor.db.test;
+
 import com.jd.home.framework.monitor.db.jdbc.ds.MonitorDbcpDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.Test;
+
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * 监控DBCP测试
+ *
  * @author wsp
  * @since 2018/01/30
  */
-public class MonitorDbcpDataSourceTest extends MonitorDataSourceTest<MonitorDbcpDataSource> {
+public class MonitorDbcpDataSourceTest extends MonitorDataSourceTest {
 
-
-    public static final String INNSERT_SQL = "insert into sequence_value (uid,name,id)value(0,\"test\",1)";
-    public static final String SELECT_SQL = "select * from sequence_value";
-    public static final String UPDATE_SQL = "update sequence_value set name = 'haha' where uid = 54";
-    public static final String DELETE_SQL = "delete from sequence_value where uid = 54";
 
     @Test
-    public void select()throws Exception{
-        Connection connection =  dataSource.getConnection();
-        Statement statement =  connection.createStatement();
-        ResultSet resultSet =  statement.executeQuery(SELECT_SQL);
-        System.out.println(resultSet);
+    public void select() throws Exception {
+        Connection connection = dataSource.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(SqlConstant.TEST_SELECT_SQL);
+        while (resultSet.next()) {
+            System.out.println(resultSet.getLong(1) + "\t" + resultSet.getString(2) + "\t" + resultSet.getLong(3));
+        }
     }
 
     @Test
-    public void insert()throws Exception{
-        Connection connection =  dataSource.getConnection();
+    public void insert() throws Exception {
+        Connection connection = dataSource.getConnection();
         connection.setAutoCommit(false);
-        Statement statement =  connection.createStatement();
-        int flag =  statement.executeUpdate(INNSERT_SQL);
+        Statement statement = connection.createStatement();
+        int flag = statement.executeUpdate(SqlConstant.TEST_INNSERT_SQL);
         connection.commit();
         System.out.println(flag);
     }
 
 
     @Test
-    public void update()throws Exception{
-        Connection connection =  dataSource.getConnection();
-        Statement statement =  connection.createStatement();
-        int flag =  statement.executeUpdate(UPDATE_SQL);
-        System.out.println(flag);
-    }
-
-
-    @Test
-    public void delete()throws Exception{
-        Connection connection =  dataSource.getConnection();
-        Statement statement =  connection.createStatement();
-        int flag =  statement.executeUpdate(DELETE_SQL);
-        System.out.println(flag);
-    }
-
-
-    @Test
-    public void selectByPrepared() throws Exception{
-        Connection connection =  dataSource.getConnection();
-        String sql = "select * from sequence_value where uid = ?";
-        PreparedStatement preparedStatement =  connection.prepareStatement(sql);
-        preparedStatement.setInt(1,54);
-        ResultSet resultSet =  preparedStatement.executeQuery();
-        System.out.println(resultSet);
-    }
-
-
-    @Test
-    public void insertByPrepared()throws Exception{
-        Connection connection =  dataSource.getConnection();
+    public void update() throws Exception {
+        Connection connection = dataSource.getConnection();
         connection.setAutoCommit(false);
-        PreparedStatement preparedStatement =  connection.prepareStatement(INNSERT_SQL);
-        int flag =   preparedStatement.executeUpdate();
+        Statement statement = connection.createStatement();
+        int flag = statement.executeUpdate(SqlConstant.TEST_UPDATE_SQL);
         connection.commit();
         System.out.println(flag);
     }
 
 
     @Test
-    public void updateByPrepared()throws Exception{
-        Connection connection =  dataSource.getConnection();
-        PreparedStatement preparedStatement =  connection.prepareStatement(UPDATE_SQL);
-        int flag =  preparedStatement.executeUpdate();
+    public void delete() throws Exception {
+        Connection connection = dataSource.getConnection();
+        connection.setAutoCommit(false);
+        Statement statement = connection.createStatement();
+        int flag = statement.executeUpdate(SqlConstant.TEST_DELETE_SQL);
+        connection.commit();
         System.out.println(flag);
     }
 
 
     @Test
-    public void deleteByPrepared()throws Exception{
-        Connection connection =  dataSource.getConnection();
-        PreparedStatement preparedStatement =  connection.prepareStatement(DELETE_SQL);
-        int flag =  preparedStatement.executeUpdate();
+    public void selectByPrepared() throws Exception {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlConstant.TEST_SELECT_SQL_PREPARED);
+        preparedStatement.setInt(1, 1000);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            System.out.println(resultSet.getLong(1) + "\t" + resultSet.getString(2) + "\t" + resultSet.getLong(3));
+        }
+    }
+
+
+    @Test
+    public void insertByPrepared() throws Exception {
+        Connection connection = dataSource.getConnection();
+        connection.setAutoCommit(false);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlConstant.TEST_INNSERT_SQL_PREPARED);
+        preparedStatement.setInt(1, 1000);
+        preparedStatement.setString(2, "test");
+        preparedStatement.setLong(3, 1);
+        int flag = preparedStatement.executeUpdate();
+        connection.commit();
         System.out.println(flag);
     }
 
-    protected MonitorDbcpDataSource createDataSource(){
+
+    @Test
+    public void updateByPrepared() throws Exception {
+        Connection connection = dataSource.getConnection();
+        connection.setAutoCommit(false);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlConstant.TEST_UPDATE_SQL_PREPARED);
+        preparedStatement.setString(1, "haha");
+        preparedStatement.setLong(2, 1000);
+        int flag = preparedStatement.executeUpdate();
+        connection.commit();
+        System.out.println(flag);
+    }
+
+
+    @Test
+    public void deleteByPrepared() throws Exception {
+        Connection connection = dataSource.getConnection();
+        connection.setAutoCommit(false);
+        PreparedStatement preparedStatement = connection.prepareStatement(SqlConstant.TEST_DELETE_SQL_PREPARED);
+        preparedStatement.setLong(1, 1000);
+        int flag = preparedStatement.executeUpdate();
+        connection.commit();
+        System.out.println(flag);
+    }
+
+
+    @Test
+    public void getMeteData() throws Exception {
+        Connection connection = dataSource.getConnection();
+        DatabaseMetaData metaData = connection.getMetaData();
+        System.out.println(metaData.getDatabaseProductName());
+    }
+
+    protected MonitorDbcpDataSource createMonitorDataSource() {
         MonitorDbcpDataSource dataSource = new MonitorDbcpDataSource();
         dataSource.setTargetDataSource(createDbcpDataSource());
+        dataSource.setSlowSqlTimeout(150);
         dataSource.init();
         return dataSource;
     }
 
 
-    private DataSource createDbcpDataSource(){
+    private DataSource createDbcpDataSource() {
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl("jdbc:mysql://192.168.195.161:3306/pop_auction");
         basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");

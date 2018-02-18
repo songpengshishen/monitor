@@ -29,7 +29,7 @@
 
 
     <select id="select" parameterClass="java.lang.Long" resultMap="sequencevalueResMap">
-        SELECT COUNT(1)
+        SELECT *
         FROM sequence_value
         WHERE UID = #uid#
     </select>

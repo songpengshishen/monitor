@@ -3,6 +3,8 @@ import com.jd.home.framework.monitor.db.config.SystemConstans;
 import com.jd.ump.profiler.proxy.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -53,6 +55,7 @@ public class UmpStore {
      * @param ump
      */
     private void sendUmp(Ump ump) {
+        System.out.println("发送数据,UMP = " + ump);
         Profiler.businessAlarm(ump.getKey(),ump.getDate().getTime(), ump.getInfo());
     }
 
@@ -74,12 +77,21 @@ public class UmpStore {
                         Thread.sleep(1000l);
                     }
                 }catch (InterruptedException e1){
-                    logger.error("Thread : " + Thread.currentThread().getName() + "InterruptedException!");
+                    if(logger.isInfoEnabled()){
+                        logger.info("Thread : " + Thread.currentThread().getName() + "InterruptedException!");
+                    }
                     stop = true;
                 }catch (Exception e2){
                     logger.error("Thread : " + Thread.currentThread().getName() + "Execute Fail! ErrMsg : " + e2,e2);
                 }
             }
+        }
+    }
+
+    public static void main(String[] args) {
+        UmpStore umpStore = new UmpStore();
+        for(;;){
+            umpStore.storeUmp(new Ump("aa.bb.cc","assdasd",new Date()));
         }
     }
 }
