@@ -4,7 +4,6 @@ import com.jd.ump.profiler.proxy.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,7 +19,7 @@ public class UmpStore {
 
 
     public UmpStore(){
-         Thread  t1 = new Thread(new SendUmpThread(),SystemConstans.SEND_UMP_THREAD_NAME);
+         Thread  t1 = new Thread(new SendUmpTask(),SystemConstans.SEND_UMP_THREAD_NAME);
          t1.setDaemon(true);
          t1.setPriority(Thread.NORM_PRIORITY);
          t1.start();
@@ -55,7 +54,6 @@ public class UmpStore {
      * @param ump
      */
     private void sendUmp(Ump ump) {
-        System.out.println("发送数据,UMP = " + ump);
         Profiler.businessAlarm(ump.getKey(),ump.getDate().getTime(), ump.getInfo());
     }
 
@@ -63,7 +61,7 @@ public class UmpStore {
     /**
      * 发送ump线程
      */
-    class SendUmpThread implements Runnable{
+    class SendUmpTask implements Runnable{
         boolean stop = false;
         @Override
         public void run() {
@@ -88,10 +86,5 @@ public class UmpStore {
         }
     }
 
-    public static void main(String[] args) {
-        UmpStore umpStore = new UmpStore();
-        for(;;){
-            umpStore.storeUmp(new Ump("aa.bb.cc","assdasd",new Date()));
-        }
-    }
+
 }
