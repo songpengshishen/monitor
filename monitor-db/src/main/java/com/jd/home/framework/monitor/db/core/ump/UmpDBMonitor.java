@@ -80,9 +80,6 @@ public class UmpDBMonitor implements DBMonitor {
                 String sql = sqlRecord.getSql();
                 String info = new StringBuilder("数据库").append(this.monitorDataSource.getUrl()).append("执行过程中出现超时,sql:")
                         .append(sql).toString();
-                if (logger.isWarnEnabled()) {
-                    logger.warn(info);
-                }
                 sqlRecord.setProcessState(SqlRecord.STATE_TRUE);
                 Ump ump = new Ump(this.monitorConfig.getSlowSqlKey(),info);
                 umpStore.storeUmp(ump);
@@ -102,9 +99,6 @@ public class UmpDBMonitor implements DBMonitor {
             String sql = sqlRecord.getSql();
             String info = new StringBuilder("数据库").append(this.monitorDataSource.getUrl()).append("执行错误的sql:")
                     .append(sql).append("异常信息:").append(t).toString();
-            if (logger.isWarnEnabled()) {
-                logger.warn(info);
-            }
             sqlRecord.setProcessState(SqlRecord.STATE_FALSE);
             sqlRecord.setThrowable(t);
             Ump ump = new Ump(this.monitorConfig.getSqlExceptionKey(),info);
@@ -190,10 +184,6 @@ public class UmpDBMonitor implements DBMonitor {
                     .append(config.getMaxActiveConRatio() * 100).append("%,")
                     .append("当前活跃连接数").append(activeNum).append(",")
                     .append("允许最大活跃连接数").append(maxNum).append(".").toString();
-                    if (logger.isWarnEnabled()) {
-                        logger.warn(info);
-                    }
-
                     Ump ump = new Ump(config.getTooManyActiveConnKey(),info);
                     umpStore.storeUmp(ump);
                 }
