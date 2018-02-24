@@ -1,5 +1,6 @@
 package com.jd.home.framework.monitor.db.test;
 
+import com.jd.home.framework.monitor.db.config.SystemConstans;
 import com.jd.home.framework.monitor.db.jdbc.ds.MonitorDbcpDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.Test;
@@ -138,6 +139,19 @@ public class MonitorDbcpDataSourceTest extends MonitorDataSourceTest {
         basicDataSource.setMinIdle(2);
         basicDataSource.setMaxWait(15000);
         return basicDataSource;
+    }
+
+    @Test
+    public void test() throws Exception{
+        long time = System.currentTimeMillis();
+        for(int i = 5000 ; i<10000;i++){
+            Connection connection = createDbcpDataSource().getConnection();
+            connection.setAutoCommit(false);
+            Statement statement = connection.createStatement();
+            int flag = statement.executeUpdate("insert into sequence_value (uid,name,id)value("+i+","+i+","+i+")");
+            connection.commit();
+        }
+        System.out.println("测试完成,共耗时 : " + (System.currentTimeMillis() - time));
     }
 
 }
